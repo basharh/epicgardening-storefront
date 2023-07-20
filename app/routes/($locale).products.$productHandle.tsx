@@ -23,6 +23,8 @@ import {
   IconCaret,
   IconCheck,
   IconClose,
+  IconHeartOutline,
+  IconHeartFull,
   ProductGallery,
   ProductSwimlane,
   Section,
@@ -31,6 +33,7 @@ import {
   Link,
   AddToCartButton,
   Button,
+  WishlistIcon,
 } from '~/components';
 import { getExcerpt } from '~/lib/utils';
 import { seoPayload } from '~/lib/seo.server';
@@ -117,6 +120,7 @@ export default function Product() {
                 <Heading as="h1" className="whitespace-normal">
                   {title}
                 </Heading>
+                <WishlistIcon />
                 {vendor && (
                   <Text className={'opacity-50 font-medium'}>{vendor}</Text>
                 )}
