@@ -10,6 +10,7 @@ import {
   getWishlist,
   addToWishlist,
   removeFromWishlist,
+  inWishlist,
 } from '~/data/wishlist';
 
 export const action: ActionFunction = async ({
@@ -20,9 +21,6 @@ export const action: ActionFunction = async ({
 
   const action = data.get('action') as string;
   const shopifyProductId = data.get('shopifyProductId') as string;
-
-  console.log('shopifyProductId:', shopifyProductId);
-  console.log('action:', action);
 
   if (action === 'add') {
     console.log('adding:', shopifyProductId);
@@ -53,7 +51,7 @@ export default function Wishlist() {
           <div className="flex items-center">
             <div className="p-2">{product.shopifyId}</div>
             <WishlistIcon
-              wishlist={wishlist}
+              selected={inWishlist(wishlist, product.shopifyId)}
               shopifyProductId={product.shopifyId}
             />
           </div>

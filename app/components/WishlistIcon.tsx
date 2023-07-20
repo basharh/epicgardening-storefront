@@ -24,7 +24,7 @@ export function WishlistIcon({
   }
 
   return (
-    <div className="p-2">
+    <div className="py-2">
       <button onClick={handleClick}>
         {selected ? <IconHeartFull /> : <IconHeartOutline />}
       </button>
