@@ -32,3 +32,11 @@ export enum CartAction {
   UPDATE_BUYER_IDENTITY = 'UPDATE_BUYER_IDENTITY',
 }
 export type CartActions = keyof typeof CartAction;
+
+export type Wishlist = {
+  id: string;
+  products: Array<{
+    id: string;
+    shopifyId: string;
+  }>;
+};

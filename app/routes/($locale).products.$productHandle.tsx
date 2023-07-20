@@ -1,6 +1,6 @@
 import { type ReactNode, useRef, Suspense, useMemo } from 'react';
 import { Disclosure, Listbox } from '@headlessui/react';
-import { defer, type LoaderArgs } from '@shopify/remix-oxygen';
+import { defer, type LoaderArgs, json } from '@shopify/remix-oxygen';
 import {
   useLoaderData,
   Await,
@@ -17,6 +17,8 @@ import type {
   Product as ProductType,
   ProductConnection,
 } from '@shopify/hydrogen/storefront-api-types';
+//import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { GraphQLClient, gql } from 'graphql-request';
 
 import {
   Heading,
@@ -40,6 +42,7 @@ import { seoPayload } from '~/lib/seo.server';
 import { MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
 import type { Storefront } from '~/lib/type';
 import { routeHeaders } from '~/data/cache';
+import type { Wishlist } from '~/lib/type';
 
 export const headers = routeHeaders;
 
@@ -86,6 +89,8 @@ export async function loader({ params, request, context }: LoaderArgs) {
     url: request.url,
   });
 
+  const wishlist = await getWishlist();
+
   return defer({
     product,
     shop,
@@ -98,11 +103,13 @@ export async function loader({ params, request, context }: LoaderArgs) {
       totalValue: parseFloat(selectedVariant.price.amount),
     },
     seo,
+    wishlist,
   });
 }
 
 export default function Product() {
-  const { product, shop, recommended } = useLoaderData<typeof loader>();
+  const { product, shop, recommended, wishlist } =
+    useLoaderData<typeof loader>();
   const { media, title, vendor, descriptionHtml } = product;
   const { shippingPolicy, refundPolicy } = shop;
 
@@ -120,7 +127,7 @@ export default function Product() {
                 <Heading as="h1" className="whitespace-normal">
                   {title}
                 </Heading>
-                <WishlistIcon />
+                <WishlistIcon wishlist={wishlist} product={product} />
                 {vendor && (
                   <Text className={'opacity-50 font-medium'}>{vendor}</Text>
                 )}
@@ -622,4 +629,27 @@ async function getRecommendedProducts(
   mergedProducts.splice(originalProduct, 1);
 
   return { nodes: mergedProducts };
+}
+
+async function getWishlist() {
+  const client = new GraphQLClient('http://localhost:4000/graphql', {
+    fetch: fetch,
+  });
+
+  const result = (await client.request(
+    gql`
+      query GetWishlist {
+        wishlist {
+          id
+          products {
+            id
+            shopifyId
+          }
+        }
+      }
+    `
+  )) as { wishlist: Wishlist };
+
+  return result.wishlist;
+  //.then((result) => console.dir(result, { depth: null }));
 }
