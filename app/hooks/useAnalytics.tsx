@@ -1,4 +1,4 @@
-import {useLocation, useFetchers, useMatches} from '@remix-run/react';
+import { useLocation, useFetchers, useMatches } from '@remix-run/react';
 import type {
   ShopifyAddToCartPayload,
   ShopifyPageViewPayload,
@@ -9,16 +9,16 @@ import {
   sendShopifyAnalytics,
   useShopifyCookies,
 } from '@shopify/hydrogen';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
-import type {I18nLocale} from '../lib/type';
-import {CartAction} from '../lib/type';
+import type { I18nLocale } from '../lib/type';
+import { CartAction } from '../lib/type';
 
 export function useAnalytics(hasUserConsent: boolean, locale: I18nLocale) {
-  useShopifyCookies({hasUserConsent});
+  useShopifyCookies({ hasUserConsent });
   const location = useLocation();
   const analyticsFromMatches = useDataFromMatches(
-    'analytics',
+    'analytics'
   ) as unknown as ShopifyPageViewPayload;
 
   const pageAnalytics = {

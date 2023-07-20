@@ -1,23 +1,23 @@
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
+import { json, type LoaderArgs } from '@shopify/remix-oxygen';
+import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import {
   Pagination__unstable as Pagination,
   getPaginationVariables__unstable as getPaginationVariables,
 } from '@shopify/hydrogen';
 
-import {PageHeader, Section, ProductCard, Grid} from '~/components';
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {getImageLoadingPriority} from '~/lib/const';
-import {seoPayload} from '~/lib/seo.server';
-import {routeHeaders} from '~/data/cache';
+import { PageHeader, Section, ProductCard, Grid } from '~/components';
+import { PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
+import { getImageLoadingPriority } from '~/lib/const';
+import { seoPayload } from '~/lib/seo.server';
+import { routeHeaders } from '~/data/cache';
 
 const PAGE_BY = 8;
 
 export const headers = routeHeaders;
 
-export async function loader({request, context: {storefront}}: LoaderArgs) {
-  const variables = getPaginationVariables(request, {pageBy: PAGE_BY});
+export async function loader({ request, context: { storefront } }: LoaderArgs) {
+  const variables = getPaginationVariables(request, { pageBy: PAGE_BY });
 
   const data = await storefront.query(ALL_PRODUCTS_QUERY, {
     variables: {
@@ -54,14 +54,14 @@ export async function loader({request, context: {storefront}}: LoaderArgs) {
 }
 
 export default function AllProducts() {
-  const {products} = useLoaderData<typeof loader>();
+  const { products } = useLoaderData<typeof loader>();
 
   return (
     <>
       <PageHeader heading="All Products" variant="allCollections" />
       <Section>
         <Pagination connection={products}>
-          {({nodes, isLoading, NextLink, PreviousLink}) => {
+          {({ nodes, isLoading, NextLink, PreviousLink }) => {
             const itemsMarkup = nodes.map((product, i) => (
               <ProductCard
                 key={product.id}

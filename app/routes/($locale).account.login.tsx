@@ -11,16 +11,16 @@ import {
   useLoaderData,
   type V2_MetaFunction,
 } from '@remix-run/react';
-import {useState} from 'react';
+import { useState } from 'react';
 
-import {getInputStyleClasses} from '~/lib/utils';
-import {Link} from '~/components';
+import { getInputStyleClasses } from '~/lib/utils';
+import { Link } from '~/components';
 
 export const handle = {
   isPublic: true,
 };
 
-export async function loader({context, params}: LoaderArgs) {
+export async function loader({ context, params }: LoaderArgs) {
   const customerAccessToken = await context.session.get('customerAccessToken');
 
   if (customerAccessToken) {
@@ -28,16 +28,16 @@ export async function loader({context, params}: LoaderArgs) {
   }
 
   // TODO: Query for this?
-  return json({shopName: 'Hydrogen'});
+  return json({ shopName: 'Hydrogen' });
 }
 
 type ActionData = {
   formError?: string;
 };
 
-const badRequest = (data: ActionData) => json(data, {status: 400});
+const badRequest = (data: ActionData) => json(data, { status: 400 });
 
-export const action: ActionFunction = async ({request, context, params}) => {
+export const action: ActionFunction = async ({ request, context, params }) => {
   const formData = await request.formData();
 
   const email = formData.get('email');
@@ -54,10 +54,10 @@ export const action: ActionFunction = async ({request, context, params}) => {
     });
   }
 
-  const {session, storefront} = context;
+  const { session, storefront } = context;
 
   try {
-    const customerAccessToken = await doLogin(context, {email, password});
+    const customerAccessToken = await doLogin(context, { email, password });
     session.set('customerAccessToken', customerAccessToken);
 
     return redirect(params.locale ? `/${params.locale}/account` : '/account', {
@@ -84,15 +84,15 @@ export const action: ActionFunction = async ({request, context, params}) => {
 };
 
 export const meta: V2_MetaFunction = () => {
-  return [{title: 'Login'}];
+  return [{ title: 'Login' }];
 };
 
 export default function Login() {
-  const {shopName} = useLoaderData<typeof loader>();
+  const { shopName } = useLoaderData<typeof loader>();
   const actionData = useActionData<ActionData>();
   const [nativeEmailError, setNativeEmailError] = useState<null | string>(null);
   const [nativePasswordError, setNativePasswordError] = useState<null | string>(
-    null,
+    null
   );
 
   return (
@@ -127,7 +127,7 @@ export default function Login() {
                   event.currentTarget.value.length &&
                     !event.currentTarget.validity.valid
                     ? 'Invalid email address'
-                    : null,
+                    : null
                 );
               }}
             />
@@ -159,7 +159,7 @@ export default function Login() {
                   setNativePasswordError(
                     event.currentTarget.validity.valueMissing
                       ? 'Please enter a password'
-                      : 'Passwords must be at least 8 characters',
+                      : 'Passwords must be at least 8 characters'
                   );
                 }
               }}
@@ -217,14 +217,14 @@ const LOGIN_MUTATION = `#graphql
 `;
 
 export async function doLogin(
-  {storefront}: AppLoadContext,
+  { storefront }: AppLoadContext,
   {
     email,
     password,
   }: {
     email: string;
     password: string;
-  },
+  }
 ) {
   const data = await storefront.mutate(LOGIN_MUTATION, {
     variables: {
@@ -243,6 +243,6 @@ export async function doLogin(
    * Something is wrong with the user's input.
    */
   throw new Error(
-    data?.customerAccessTokenCreate?.customerUserErrors.join(', '),
+    data?.customerAccessTokenCreate?.customerUserErrors.join(', ')
   );
 }

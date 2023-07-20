@@ -1,22 +1,22 @@
-import type {SyntheticEvent} from 'react';
-import {useMemo, useState} from 'react';
-import {Menu} from '@headlessui/react';
-import type {Location} from '@remix-run/react';
+import type { SyntheticEvent } from 'react';
+import { useMemo, useState } from 'react';
+import { Menu } from '@headlessui/react';
+import type { Location } from '@remix-run/react';
 import {
   Link,
   useLocation,
   useSearchParams,
   useNavigate,
 } from '@remix-run/react';
-import {useDebounce} from 'react-use';
-import {Disclosure} from '@headlessui/react';
+import { useDebounce } from 'react-use';
+import { Disclosure } from '@headlessui/react';
 import type {
   FilterType,
   Filter,
   Collection,
 } from '@shopify/hydrogen/storefront-api-types';
 
-import {Heading, IconFilters, IconCaret, IconXMark, Text} from '~/components';
+import { Heading, IconFilters, IconCaret, IconXMark, Text } from '~/components';
 
 export type AppliedFilter = {
   label: string;
@@ -37,7 +37,7 @@ type Props = {
   filters: Filter[];
   appliedFilters?: AppliedFilter[];
   children: React.ReactNode;
-  collections?: Array<{handle: string; title: string}>;
+  collections?: Array<{ handle: string; title: string }>;
 };
 
 export function SortFilter({
@@ -108,7 +108,7 @@ export function FiltersDrawer({
           filter,
           option.input as string,
           params,
-          location,
+          location
         );
         return (
           <Link
@@ -154,7 +154,7 @@ export function FiltersDrawer({
             (filter: Filter) =>
               filter.values.length > 1 && (
                 <Disclosure as="div" key={filter.id} className="w-full">
-                  {({open}) => (
+                  {({ open }) => (
                     <>
                       <Disclosure.Button className="flex justify-between w-full py-4">
                         <Text size="lead">{filter.label}</Text>
@@ -174,7 +174,7 @@ export function FiltersDrawer({
                     </>
                   )}
                 </Disclosure>
-              ),
+              )
           )}
         </div>
       </nav>
@@ -182,7 +182,7 @@ export function FiltersDrawer({
   );
 }
 
-function AppliedFilters({filters = []}: {filters: AppliedFilter[]}) {
+function AppliedFilters({ filters = [] }: { filters: AppliedFilter[] }) {
   const [params] = useSearchParams();
   const location = useLocation();
   return (
@@ -213,13 +213,13 @@ function AppliedFilters({filters = []}: {filters: AppliedFilter[]}) {
 function getAppliedFilterLink(
   filter: AppliedFilter,
   params: URLSearchParams,
-  location: Location,
+  location: Location
 ) {
   const paramsClone = new URLSearchParams(params);
   if (filter.urlParam.key === 'variantOption') {
     const variantOptions = paramsClone.getAll('variantOption');
     const filteredVariantOptions = variantOptions.filter(
-      (options) => !options.includes(filter.urlParam.value),
+      (options) => !options.includes(filter.urlParam.value)
     );
     paramsClone.delete(filter.urlParam.key);
     for (const filteredVariantOption of filteredVariantOptions) {
@@ -234,7 +234,7 @@ function getAppliedFilterLink(
 function getSortLink(
   sort: SortParam,
   params: URLSearchParams,
-  location: Location,
+  location: Location
 ) {
   params.set('sort', sort);
   return `${location.pathname}?${params.toString()}`;
@@ -244,7 +244,7 @@ function getFilterLink(
   filter: Filter,
   rawInput: string | Record<string, any>,
   params: URLSearchParams,
-  location: ReturnType<typeof useLocation>,
+  location: ReturnType<typeof useLocation>
 ) {
   const paramsClone = new URLSearchParams(params);
   const newParams = filterInputToParams(filter.type, rawInput, paramsClone);
@@ -253,11 +253,11 @@ function getFilterLink(
 
 const PRICE_RANGE_FILTER_DEBOUNCE = 500;
 
-function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
+function PriceRangeFilter({ max, min }: { max?: number; min?: number }) {
   const location = useLocation();
   const params = useMemo(
     () => new URLSearchParams(location.search),
-    [location.search],
+    [location.search]
   );
   const navigate = useNavigate();
 
@@ -272,15 +272,15 @@ function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
       )
         return;
 
-      const price: {min?: string; max?: string} = {};
+      const price: { min?: string; max?: string } = {};
       if (minPrice !== '') price.min = minPrice;
       if (maxPrice !== '') price.max = maxPrice;
 
-      const newParams = filterInputToParams('PRICE_RANGE', {price}, params);
+      const newParams = filterInputToParams('PRICE_RANGE', { price }, params);
       navigate(`${location.pathname}?${newParams.toString()}`);
     },
     PRICE_RANGE_FILTER_DEBOUNCE,
-    [minPrice, maxPrice],
+    [minPrice, maxPrice]
   );
 
   const onChangeMax = (event: SyntheticEvent) => {
@@ -324,7 +324,7 @@ function PriceRangeFilter({max, min}: {max?: number; min?: number}) {
 function filterInputToParams(
   type: FilterType,
   rawInput: string | Record<string, any>,
-  params: URLSearchParams,
+  params: URLSearchParams
 ) {
   const input = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
   switch (type) {
@@ -339,7 +339,7 @@ function filterInputToParams(
         } else if (typeof value === 'boolean') {
           params.set(key, value.toString());
         } else {
-          const {name, value: val} = value as {name: string; value: string};
+          const { name, value: val } = value as { name: string; value: string };
           const allVariants = params.getAll(`variantOption`);
           const newVariant = `${name}:${val}`;
           if (!allVariants.includes(newVariant)) {
@@ -354,8 +354,8 @@ function filterInputToParams(
 }
 
 export default function SortMenu() {
-  const items: {label: string; key: SortParam}[] = [
-    {label: 'Featured', key: 'featured'},
+  const items: { label: string; key: SortParam }[] = [
+    { label: 'Featured', key: 'featured' },
     {
       label: 'Price: Low - High',
       key: 'price-low-high',

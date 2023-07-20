@@ -1,9 +1,9 @@
-import {type LoaderArgs} from '@shopify/remix-oxygen';
+import { type LoaderArgs } from '@shopify/remix-oxygen';
 
-export const loader = ({request}: LoaderArgs) => {
+export const loader = ({ request }: LoaderArgs) => {
   const url = new URL(request.url);
 
-  return new Response(robotsTxtData({url: url.origin}), {
+  return new Response(robotsTxtData({ url: url.origin }), {
     status: 200,
     headers: {
       'content-type': 'text/plain',
@@ -13,7 +13,7 @@ export const loader = ({request}: LoaderArgs) => {
   });
 };
 
-function robotsTxtData({url}: {url: string}) {
+function robotsTxtData({ url }: { url: string }) {
   const sitemapUrl = url ? `${url}/sitemap.xml` : undefined;
 
   return `

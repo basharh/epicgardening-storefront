@@ -1,10 +1,10 @@
-import {flattenConnection, Image} from '@shopify/hydrogen';
+import { flattenConnection, Image } from '@shopify/hydrogen';
 
-import type {OrderCardFragment} from 'storefrontapi.generated';
-import {Heading, Text, Link} from '~/components';
-import {statusMessage} from '~/lib/utils';
+import type { OrderCardFragment } from 'storefrontapi.generated';
+import { Heading, Text, Link } from '~/components';
+import { statusMessage } from '~/lib/utils';
 
-export function OrderCard({order}: {order: OrderCardFragment}) {
+export function OrderCard({ order }: { order: OrderCardFragment }) {
   if (!order?.id) return null;
   const [legacyOrderId, key] = order!.id!.split('/').pop()!.split('?');
   const lineItems = flattenConnection(order?.lineItems);

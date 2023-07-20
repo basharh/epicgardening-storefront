@@ -1,6 +1,6 @@
-import {type ReactNode, useRef, Suspense, useMemo} from 'react';
-import {Disclosure, Listbox} from '@headlessui/react';
-import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
+import { type ReactNode, useRef, Suspense, useMemo } from 'react';
+import { Disclosure, Listbox } from '@headlessui/react';
+import { defer, type LoaderArgs } from '@shopify/remix-oxygen';
 import {
   useLoaderData,
   Await,
@@ -8,8 +8,8 @@ import {
   useLocation,
   useNavigation,
 } from '@remix-run/react';
-import type {ShopifyAnalyticsProduct} from '@shopify/hydrogen';
-import {AnalyticsPageType, Money, ShopPayButton} from '@shopify/hydrogen';
+import type { ShopifyAnalyticsProduct } from '@shopify/hydrogen';
+import { AnalyticsPageType, Money, ShopPayButton } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 import clsx from 'clsx';
 import type {
@@ -32,26 +32,26 @@ import {
   AddToCartButton,
   Button,
 } from '~/components';
-import {getExcerpt} from '~/lib/utils';
-import {seoPayload} from '~/lib/seo.server';
-import {MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import type {Storefront} from '~/lib/type';
-import {routeHeaders} from '~/data/cache';
+import { getExcerpt } from '~/lib/utils';
+import { seoPayload } from '~/lib/seo.server';
+import { MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
+import type { Storefront } from '~/lib/type';
+import { routeHeaders } from '~/data/cache';
 
 export const headers = routeHeaders;
 
-export async function loader({params, request, context}: LoaderArgs) {
-  const {productHandle} = params;
+export async function loader({ params, request, context }: LoaderArgs) {
+  const { productHandle } = params;
   invariant(productHandle, 'Missing productHandle param, check route filename');
 
   const searchParams = new URL(request.url).searchParams;
 
   const selectedOptions: SelectedOptionInput[] = [];
   searchParams.forEach((value, name) => {
-    selectedOptions.push({name, value});
+    selectedOptions.push({ name, value });
   });
 
-  const {shop, product} = await context.storefront.query(PRODUCT_QUERY, {
+  const { shop, product } = await context.storefront.query(PRODUCT_QUERY, {
     variables: {
       handle: productHandle,
       selectedOptions,
@@ -61,7 +61,7 @@ export async function loader({params, request, context}: LoaderArgs) {
   });
 
   if (!product?.id) {
-    throw new Response('product', {status: 404});
+    throw new Response('product', { status: 404 });
   }
 
   const recommended = getRecommendedProducts(context.storefront, product.id);
@@ -99,9 +99,9 @@ export async function loader({params, request, context}: LoaderArgs) {
 }
 
 export default function Product() {
-  const {product, shop, recommended} = useLoaderData<typeof loader>();
-  const {media, title, vendor, descriptionHtml} = product;
-  const {shippingPolicy, refundPolicy} = shop;
+  const { product, shop, recommended } = useLoaderData<typeof loader>();
+  const { media, title, vendor, descriptionHtml } = product;
+  const { shippingPolicy, refundPolicy } = shop;
 
   return (
     <>
@@ -163,10 +163,10 @@ export default function Product() {
 }
 
 export function ProductForm() {
-  const {product, analytics, storeDomain} = useLoaderData<typeof loader>();
+  const { product, analytics, storeDomain } = useLoaderData<typeof loader>();
 
   const [currentSearchParams] = useSearchParams();
-  const {location} = useNavigation();
+  const { location } = useNavigation();
 
   /**
    * We update `searchParams` with in-flight request data from `location` (if available)
@@ -190,7 +190,7 @@ export function ProductForm() {
   const searchParamsWithDefaults = useMemo<URLSearchParams>(() => {
     const clonedParams = new URLSearchParams(searchParams);
 
-    for (const {name, value} of firstVariant.selectedOptions) {
+    for (const { name, value } of firstVariant.selectedOptions) {
       if (!searchParams.has(name)) {
         clonedParams.set(name, value);
       }
@@ -284,7 +284,7 @@ function ProductOptions({
   options,
   searchParamsWithDefaults,
 }: {
-  options: Array<{name: string; values: string[]}>;
+  options: Array<{ name: string; values: string[] }>;
   searchParamsWithDefaults: URLSearchParams;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -312,7 +312,7 @@ function ProductOptions({
               {option.values.length > 7 ? (
                 <div className="relative w-full">
                   <Listbox>
-                    {({open}) => (
+                    {({ open }) => (
                       <>
                         <Listbox.Button
                           ref={closeRef}
@@ -320,7 +320,7 @@ function ProductOptions({
                             'flex items-center justify-between w-full py-3 px-4 border border-primary',
                             open
                               ? 'rounded-b md:rounded-t md:rounded-b-none'
-                              : 'rounded',
+                              : 'rounded'
                           )}
                         >
                           <span>
@@ -331,7 +331,7 @@ function ProductOptions({
                         <Listbox.Options
                           className={clsx(
                             'border-primary bg-contrast absolute bottom-12 z-30 grid h-48 w-full overflow-y-scroll rounded-t border px-2 py-2 transition-[max-height] duration-150 sm:bottom-auto md:rounded-b md:rounded-t-none md:border-t-0 md:border-b',
-                            open ? 'max-h-48' : 'max-h-0',
+                            open ? 'max-h-48' : 'max-h-0'
                           )}
                         >
                           {option.values.map((value) => (
@@ -339,13 +339,13 @@ function ProductOptions({
                               key={`option-${option.name}-${value}`}
                               value={value}
                             >
-                              {({active}) => (
+                              {({ active }) => (
                                 <ProductOptionLink
                                   optionName={option.name}
                                   optionValue={value}
                                   className={clsx(
                                     'text-primary w-full p-2 transition rounded flex justify-start items-center text-left cursor-pointer',
-                                    active && 'bg-primary/10',
+                                    active && 'bg-primary/10'
                                   )}
                                   searchParams={searchParamsWithDefaults}
                                   onClick={() => {
@@ -384,7 +384,7 @@ function ProductOptions({
                           searchParams={searchParamsWithDefaults}
                           className={clsx(
                             'leading-none py-1 border-b-[1.5px] cursor-pointer transition-all duration-200',
-                            checked ? 'border-primary/50' : 'border-primary/0',
+                            checked ? 'border-primary/50' : 'border-primary/0'
                           )}
                         />
                       </Text>
@@ -412,7 +412,7 @@ function ProductOptionLink({
   children?: ReactNode;
   [key: string]: any;
 }) {
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const isLocalePathname = /\/[a-zA-Z]{2}-[a-zA-Z]{2}\//g.test(pathname);
   // fixes internalized pathname
   const path = isLocalePathname
@@ -446,7 +446,7 @@ function ProductDetail({
 }) {
   return (
     <Disclosure key={title} as="div" className="grid w-full gap-2">
-      {({open}) => (
+      {({ open }) => (
         <>
           <Disclosure.Button className="text-left">
             <div className="flex justify-between">
@@ -456,7 +456,7 @@ function ProductDetail({
               <IconClose
                 className={clsx(
                   'transition-transform transform-gpu duration-200',
-                  !open && 'rotate-[45deg]',
+                  !open && 'rotate-[45deg]'
                 )}
               />
             </div>
@@ -465,7 +465,7 @@ function ProductDetail({
           <Disclosure.Panel className={'pb-4 pt-2 grid gap-2'}>
             <div
               className="prose dark:prose-invert"
-              dangerouslySetInnerHTML={{__html: content}}
+              dangerouslySetInnerHTML={{ __html: content }}
             />
             {learnMore && (
               <div className="">
@@ -596,10 +596,10 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
 
 async function getRecommendedProducts(
   storefront: Storefront,
-  productId: string,
+  productId: string
 ) {
   const products = await storefront.query(RECOMMENDED_PRODUCTS_QUERY, {
-    variables: {productId, count: 12},
+    variables: { productId, count: 12 },
   });
 
   invariant(products, 'No data returned from Shopify API');
@@ -608,14 +608,14 @@ async function getRecommendedProducts(
     .concat(products.additional.nodes)
     .filter(
       (value, index, array) =>
-        array.findIndex((value2) => value2.id === value.id) === index,
+        array.findIndex((value2) => value2.id === value.id) === index
     );
 
   const originalProduct = mergedProducts.findIndex(
-    (item) => item.id === productId,
+    (item) => item.id === productId
   );
 
   mergedProducts.splice(originalProduct, 1);
 
-  return {nodes: mergedProducts};
+  return { nodes: mergedProducts };
 }

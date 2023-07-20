@@ -1,6 +1,6 @@
-import {Image} from '@shopify/hydrogen';
+import { Image } from '@shopify/hydrogen';
 
-import type {MediaFragment} from 'storefrontapi.generated';
+import type { MediaFragment } from 'storefrontapi.generated';
 
 /**
  * A client component that defines a media gallery for hosting images, 3D models, and videos of products
@@ -27,7 +27,7 @@ export function ProductGallery({
 
         const image =
           med.__typename === 'MediaImage'
-            ? {...med.image, altText: med.alt || 'Product image'}
+            ? { ...med.image, altText: med.alt || 'Product image' }
             : null;
 
         const style = [

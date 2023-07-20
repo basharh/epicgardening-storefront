@@ -1,12 +1,12 @@
-import type {CustomerDetailsFragment} from 'storefrontapi.generated';
-import {Link} from '~/components';
+import type { CustomerDetailsFragment } from 'storefrontapi.generated';
+import { Link } from '~/components';
 
 export function AccountDetails({
   customer,
 }: {
   customer: CustomerDetailsFragment;
 }) {
-  const {firstName, lastName, email, phone} = customer;
+  const { firstName, lastName, email, phone } = customer;
 
   return (
     <>

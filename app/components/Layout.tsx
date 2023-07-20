@@ -1,9 +1,9 @@
-import {useParams, Form, Await, useMatches} from '@remix-run/react';
-import {useWindowScroll} from 'react-use';
-import {Disclosure} from '@headlessui/react';
-import {Suspense, useEffect, useMemo} from 'react';
+import { useParams, Form, Await, useMatches } from '@remix-run/react';
+import { useWindowScroll } from 'react-use';
+import { Disclosure } from '@headlessui/react';
+import { Suspense, useEffect, useMemo } from 'react';
 
-import type {LayoutQuery} from 'storefrontapi.generated';
+import type { LayoutQuery } from 'storefrontapi.generated';
 import {
   Drawer,
   useDrawer,
@@ -22,10 +22,10 @@ import {
   CartLoading,
   Link,
 } from '~/components';
-import type {ChildEnhancedMenuItem} from '~/lib/utils';
-import {type EnhancedMenu, useIsHomePath} from '~/lib/utils';
-import {useIsHydrated} from '~/hooks/useIsHydrated';
-import {useCartFetchers} from '~/hooks/useCartFetchers';
+import type { ChildEnhancedMenuItem } from '~/lib/utils';
+import { type EnhancedMenu, useIsHomePath } from '~/lib/utils';
+import { useIsHydrated } from '~/hooks/useIsHydrated';
+import { useCartFetchers } from '~/hooks/useCartFetchers';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -35,8 +35,8 @@ type LayoutProps = {
   };
 };
 
-export function Layout({children, layout}: LayoutProps) {
-  const {headerMenu, footerMenu} = layout;
+export function Layout({ children, layout }: LayoutProps) {
+  const { headerMenu, footerMenu } = layout;
   return (
     <>
       <div className="flex flex-col min-h-screen">
@@ -55,7 +55,7 @@ export function Layout({children, layout}: LayoutProps) {
   );
 }
 
-function Header({title, menu}: {title: string; menu?: EnhancedMenu}) {
+function Header({ title, menu }: { title: string; menu?: EnhancedMenu }) {
   const isHome = useIsHomePath();
 
   const {
@@ -100,7 +100,13 @@ function Header({title, menu}: {title: string; menu?: EnhancedMenu}) {
   );
 }
 
-function CartDrawer({isOpen, onClose}: {isOpen: boolean; onClose: () => void}) {
+function CartDrawer({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const [root] = useMatches();
 
   return (
@@ -150,7 +156,7 @@ function MenuMobileNav({
             to={item.to}
             target={item.target}
             onClick={onClose}
-            className={({isActive}) =>
+            className={({ isActive }) =>
               isActive ? 'pb-1 border-b -mb-px' : 'pb-1'
             }
           >
@@ -252,7 +258,7 @@ function DesktopHeader({
   title: string;
 }) {
   const params = useParams();
-  const {y} = useWindowScroll();
+  const { y } = useWindowScroll();
   return (
     <header
       role="banner"
@@ -276,7 +282,7 @@ function DesktopHeader({
               to={item.to}
               target={item.target}
               prefetch="intent"
-              className={({isActive}) =>
+              className={({ isActive }) =>
                 isActive ? 'pb-1 border-b -mb-px' : 'pb-1'
               }
             >
@@ -316,7 +322,7 @@ function DesktopHeader({
   );
 }
 
-function AccountLink({className}: {className?: string}) {
+function AccountLink({ className }: { className?: string }) {
   const [root] = useMatches();
   const isLoggedIn = root.data?.isLoggedIn;
   return isLoggedIn ? (
@@ -380,7 +386,7 @@ function Badge({
         </div>
       </>
     ),
-    [count, dark],
+    [count, dark]
   );
 
   return isHydrated ? (
@@ -400,7 +406,7 @@ function Badge({
   );
 }
 
-function Footer({menu}: {menu?: EnhancedMenu}) {
+function Footer({ menu }: { menu?: EnhancedMenu }) {
   const isHome = useIsHomePath();
   const itemsCount = menu
     ? menu?.items?.length + 1 > 4
@@ -428,7 +434,7 @@ function Footer({menu}: {menu?: EnhancedMenu}) {
   );
 }
 
-function FooterLink({item}: {item: ChildEnhancedMenuItem}) {
+function FooterLink({ item }: { item: ChildEnhancedMenuItem }) {
   if (item.to.startsWith('http')) {
     return (
       <a href={item.to} target={item.target} rel="noopener noreferrer">
@@ -444,7 +450,7 @@ function FooterLink({item}: {item: ChildEnhancedMenuItem}) {
   );
 }
 
-function FooterMenu({menu}: {menu?: EnhancedMenu}) {
+function FooterMenu({ menu }: { menu?: EnhancedMenu }) {
   const styles = {
     section: 'grid gap-4',
     nav: 'grid gap-2 pb-6',
@@ -455,7 +461,7 @@ function FooterMenu({menu}: {menu?: EnhancedMenu}) {
       {(menu?.items || []).map((item) => (
         <section key={item.id} className={styles.section}>
           <Disclosure>
-            {({open}) => (
+            {({ open }) => (
               <>
                 <Disclosure.Button className="text-left md:cursor-default">
                   <Heading className="flex justify-between" size="lead" as="h3">

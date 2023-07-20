@@ -1,24 +1,29 @@
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
-import type {Collection} from '@shopify/hydrogen/storefront-api-types';
+import { json, type LoaderArgs } from '@shopify/remix-oxygen';
+import { useLoaderData } from '@remix-run/react';
+import type { Collection } from '@shopify/hydrogen/storefront-api-types';
 import {
   Image,
   Pagination__unstable as Pagination,
   getPaginationVariables__unstable as getPaginationVariables,
 } from '@shopify/hydrogen';
 
-import {Grid, Heading, PageHeader, Section, Link, Button} from '~/components';
-import {getImageLoadingPriority} from '~/lib/const';
-import {seoPayload} from '~/lib/seo.server';
-import {routeHeaders} from '~/data/cache';
+import { Grid, Heading, PageHeader, Section, Link, Button } from '~/components';
+import { getImageLoadingPriority } from '~/lib/const';
+import { seoPayload } from '~/lib/seo.server';
+import { routeHeaders } from '~/data/cache';
 
 const PAGINATION_SIZE = 4;
 
 export const headers = routeHeaders;
 
-export const loader = async ({request, context: {storefront}}: LoaderArgs) => {
-  const variables = getPaginationVariables(request, {pageBy: PAGINATION_SIZE});
-  const {collections} = await storefront.query(COLLECTIONS_QUERY, {
+export const loader = async ({
+  request,
+  context: { storefront },
+}: LoaderArgs) => {
+  const variables = getPaginationVariables(request, {
+    pageBy: PAGINATION_SIZE,
+  });
+  const { collections } = await storefront.query(COLLECTIONS_QUERY, {
     variables: {
       ...variables,
       country: storefront.i18n.country,
@@ -31,18 +36,18 @@ export const loader = async ({request, context: {storefront}}: LoaderArgs) => {
     url: request.url,
   });
 
-  return json({collections, seo});
+  return json({ collections, seo });
 };
 
 export default function Collections() {
-  const {collections} = useLoaderData<typeof loader>();
+  const { collections } = useLoaderData<typeof loader>();
 
   return (
     <>
       <PageHeader heading="Collections" />
       <Section>
         <Pagination connection={collections}>
-          {({nodes, isLoading, PreviousLink, NextLink}) => (
+          {({ nodes, isLoading, PreviousLink, NextLink }) => (
             <>
               <div className="flex items-center justify-center mb-6">
                 <Button as={PreviousLink} variant="secondary" width="full">

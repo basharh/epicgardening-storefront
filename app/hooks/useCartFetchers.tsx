@@ -1,4 +1,4 @@
-import {useFetchers} from '@remix-run/react';
+import { useFetchers } from '@remix-run/react';
 
 export function useCartFetchers(actionName: string) {
   const fetchers = useFetchers();

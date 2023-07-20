@@ -1,19 +1,19 @@
-import {json, redirect, type ActionFunction} from '@shopify/remix-oxygen';
-import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
-import {useRef, useState} from 'react';
+import { json, redirect, type ActionFunction } from '@shopify/remix-oxygen';
+import { Form, useActionData, type V2_MetaFunction } from '@remix-run/react';
+import { useRef, useState } from 'react';
 
-import {getInputStyleClasses} from '~/lib/utils';
+import { getInputStyleClasses } from '~/lib/utils';
 
 type ActionData = {
   formError?: string;
 };
 
-const badRequest = (data: ActionData) => json(data, {status: 400});
+const badRequest = (data: ActionData) => json(data, { status: 400 });
 
 export const action: ActionFunction = async ({
   request,
   context,
-  params: {locale, id, resetToken},
+  params: { locale, id, resetToken },
 }) => {
   if (
     !id ||
@@ -43,7 +43,7 @@ export const action: ActionFunction = async ({
     });
   }
 
-  const {session, storefront} = context;
+  const { session, storefront } = context;
 
   try {
     const data = await storefront.mutate(CUSTOMER_RESET_MUTATION, {
@@ -56,7 +56,7 @@ export const action: ActionFunction = async ({
       },
     });
 
-    const {accessToken} = data?.customerReset?.customerAccessToken ?? {};
+    const { accessToken } = data?.customerReset?.customerAccessToken ?? {};
 
     if (!accessToken) {
       /**
@@ -90,13 +90,13 @@ export const action: ActionFunction = async ({
 };
 
 export const meta: V2_MetaFunction = () => {
-  return [{title: 'Reset Password'}];
+  return [{ title: 'Reset Password' }];
 };
 
 export default function Reset() {
   const actionData = useActionData<ActionData>();
   const [nativePasswordError, setNativePasswordError] = useState<null | string>(
-    null,
+    null
   );
   const [nativePasswordConfirmError, setNativePasswordConfirmError] = useState<
     null | string
@@ -122,7 +122,7 @@ export default function Reset() {
       setNativePasswordConfirmError(
         passwordConfirmInput.current.validity.valueMissing
           ? 'Please re-enter the password'
-          : 'Passwords must be at least 8 characters',
+          : 'Passwords must be at least 8 characters'
       );
     }
   };
@@ -168,7 +168,7 @@ export default function Reset() {
                   setNativePasswordError(
                     event.currentTarget.validity.valueMissing
                       ? 'Please enter a password'
-                      : 'Passwords must be at least 8 characters',
+                      : 'Passwords must be at least 8 characters'
                   );
                 }
               }}
@@ -184,7 +184,7 @@ export default function Reset() {
             <input
               ref={passwordConfirmInput}
               className={`mb-1 ${getInputStyleClasses(
-                nativePasswordConfirmError,
+                nativePasswordConfirmError
               )}`}
               id="passwordConfirm"
               name="passwordConfirm"

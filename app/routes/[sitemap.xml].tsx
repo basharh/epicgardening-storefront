@@ -1,8 +1,8 @@
-import {flattenConnection} from '@shopify/hydrogen';
-import type {LoaderArgs} from '@shopify/remix-oxygen';
+import { flattenConnection } from '@shopify/hydrogen';
+import type { LoaderArgs } from '@shopify/remix-oxygen';
 import invariant from 'tiny-invariant';
 
-import type {SitemapsQuery} from 'storefrontapi.generated';
+import type { SitemapsQuery } from 'storefrontapi.generated';
 
 const MAX_URLS = 250; // the google limit is 50K, however, SF API only allow querying for 250 resources each time
 
@@ -17,7 +17,7 @@ interface ProductEntry {
   };
 }
 
-export async function loader({request, context: {storefront}}: LoaderArgs) {
+export async function loader({ request, context: { storefront } }: LoaderArgs) {
   const data = await storefront.query(SITEMAP_QUERY, {
     variables: {
       urlLimits: MAX_URLS,
@@ -28,14 +28,14 @@ export async function loader({request, context: {storefront}}: LoaderArgs) {
   invariant(data, 'Sitemap data is missing');
 
   return new Response(
-    shopSitemap({data, baseUrl: new URL(request.url).origin}),
+    shopSitemap({ data, baseUrl: new URL(request.url).origin }),
     {
       headers: {
         'content-type': 'application/xml',
         // Cache for 24 hours
         'cache-control': `max-age=${60 * 60 * 24}`,
       },
-    },
+    }
   );
 }
 
@@ -43,7 +43,13 @@ function xmlEncode(string: string) {
   return string.replace(/[&<>'"]/g, (char) => `&#${char.charCodeAt(0)};`);
 }
 
-function shopSitemap({data, baseUrl}: {data: SitemapsQuery; baseUrl: string}) {
+function shopSitemap({
+  data,
+  baseUrl,
+}: {
+  data: SitemapsQuery;
+  baseUrl: string;
+}) {
   const productsData = flattenConnection(data.products)
     .filter((product) => product.onlineStoreUrl)
     .map((product) => {

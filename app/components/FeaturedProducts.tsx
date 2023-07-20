@@ -1,13 +1,13 @@
 import clsx from 'clsx';
-import {useEffect, useId, useMemo} from 'react';
-import {useFetcher} from '@remix-run/react';
+import { useEffect, useId, useMemo } from 'react';
+import { useFetcher } from '@remix-run/react';
 import type {
   Product,
   ProductSortKeys,
 } from '@shopify/hydrogen/storefront-api-types';
 
-import {Heading, ProductCard, Skeleton, Text} from '~/components';
-import {usePrefixPathWithLocale} from '~/lib/utils';
+import { Heading, ProductCard, Skeleton, Text } from '~/components';
+import { usePrefixPathWithLocale } from '~/lib/utils';
 
 interface FeaturedProductsProps {
   count: number;
@@ -38,17 +38,17 @@ export function FeaturedProducts({
   reverse,
   sortKey = 'BEST_SELLING',
 }: FeaturedProductsProps) {
-  const {load, data} = useFetcher();
+  const { load, data } = useFetcher();
   const queryString = useMemo(
     () =>
-      Object.entries({count, sortKey, query, reverse})
+      Object.entries({ count, sortKey, query, reverse })
         .map(([key, val]) => (val ? `${key}=${val}` : null))
         .filter(Boolean)
         .join('&'),
-    [count, sortKey, query, reverse],
+    [count, sortKey, query, reverse]
   );
   const productsApiPath = usePrefixPathWithLocale(
-    `/api/products?${queryString}`,
+    `/api/products?${queryString}`
   );
 
   useEffect(() => {

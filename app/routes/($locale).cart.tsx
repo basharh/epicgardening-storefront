@@ -1,5 +1,5 @@
-import {Await, useMatches} from '@remix-run/react';
-import {Suspense} from 'react';
+import { Await, useMatches } from '@remix-run/react';
+import { Suspense } from 'react';
 import invariant from 'tiny-invariant';
 import {
   json,
@@ -16,12 +16,12 @@ import type {
   CartBuyerIdentityInput,
 } from '@shopify/hydrogen/storefront-api-types';
 
-import {CartLoading, Cart} from '~/components';
-import {isLocalPath, getCartId} from '~/lib/utils';
-import {CartAction, type CartActions} from '~/lib/type';
+import { CartLoading, Cart } from '~/components';
+import { isLocalPath, getCartId } from '~/lib/utils';
+import { CartAction, type CartActions } from '~/lib/type';
 
-export async function action({request, context}: ActionArgs) {
-  const {session, storefront} = context;
+export async function action({ request, context }: ActionArgs) {
+  const { session, storefront } = context;
   const headers = new Headers();
   let cartId = getCartId(request);
 
@@ -55,7 +55,9 @@ export async function action({request, context}: ActionArgs) {
        */
       if (!cartId) {
         result = await cartCreate({
-          input: countryCode ? {lines, buyerIdentity: {countryCode}} : {lines},
+          input: countryCode
+            ? { lines, buyerIdentity: { countryCode } }
+            : { lines },
           storefront,
         });
       } else {
@@ -119,7 +121,7 @@ export async function action({request, context}: ActionArgs) {
     case CartAction.UPDATE_BUYER_IDENTITY:
       const buyerIdentity = formData.get('buyerIdentity')
         ? (JSON.parse(
-            String(formData.get('buyerIdentity')),
+            String(formData.get('buyerIdentity'))
           ) as CartBuyerIdentityInput)
         : ({} as CartBuyerIdentityInput);
 
@@ -160,7 +162,7 @@ export async function action({request, context}: ActionArgs) {
     headers.set('Location', redirectTo);
   }
 
-  const {cart, errors} = result;
+  const { cart, errors } = result;
   return json(
     {
       cart,
@@ -169,7 +171,7 @@ export async function action({request, context}: ActionArgs) {
         cartId,
       },
     },
-    {status, headers},
+    { status, headers }
   );
 }
 
@@ -238,14 +240,14 @@ export async function cartCreate({
   input: CartInput;
   storefront: AppLoadContext['storefront'];
 }) {
-  const {cartCreate} = await storefront.mutate<{
+  const { cartCreate } = await storefront.mutate<{
     cartCreate: {
       cart: CartType;
       errors: CartUserError[];
     };
     errors: UserError[];
   }>(CREATE_CART_MUTATION, {
-    variables: {input},
+    variables: { input },
   });
 
   invariant(cartCreate, 'No data returned from cartCreate mutation');
@@ -286,13 +288,13 @@ export async function cartAdd({
   lines: CartLineInput[];
   storefront: AppLoadContext['storefront'];
 }) {
-  const {cartLinesAdd} = await storefront.mutate<{
+  const { cartLinesAdd } = await storefront.mutate<{
     cartLinesAdd: {
       cart: CartType;
       errors: CartUserError[];
     };
   }>(ADD_LINES_MUTATION, {
-    variables: {cartId, lines},
+    variables: { cartId, lines },
   });
 
   invariant(cartLinesAdd, 'No data returned from cartLinesAdd mutation');
@@ -347,8 +349,8 @@ export async function cartRemove({
   lineIds: CartType['id'][];
   storefront: AppLoadContext['storefront'];
 }) {
-  const {cartLinesRemove} = await storefront.mutate<{
-    cartLinesRemove: {cart: CartType; errors: UserError[]};
+  const { cartLinesRemove } = await storefront.mutate<{
+    cartLinesRemove: { cart: CartType; errors: UserError[] };
   }>(REMOVE_LINE_ITEMS_MUTATION, {
     variables: {
       cartId,
@@ -393,15 +395,15 @@ export async function cartUpdate({
   lines: CartLineUpdateInput[];
   storefront: AppLoadContext['storefront'];
 }) {
-  const {cartLinesUpdate} = await storefront.mutate<{
-    cartLinesUpdate: {cart: CartType; errors: UserError[]};
+  const { cartLinesUpdate } = await storefront.mutate<{
+    cartLinesUpdate: { cart: CartType; errors: UserError[] };
   }>(LINES_UPDATE_MUTATION, {
-    variables: {cartId, lines},
+    variables: { cartId, lines },
   });
 
   invariant(
     cartLinesUpdate,
-    'No data returned from update lines items mutation',
+    'No data returned from update lines items mutation'
   );
   return cartLinesUpdate;
 }
@@ -452,8 +454,8 @@ export async function cartUpdateBuyerIdentity({
   buyerIdentity: CartBuyerIdentityInput;
   storefront: AppLoadContext['storefront'];
 }) {
-  const {cartBuyerIdentityUpdate} = await storefront.mutate<{
-    cartBuyerIdentityUpdate: {cart: CartType; errors: UserError[]};
+  const { cartBuyerIdentityUpdate } = await storefront.mutate<{
+    cartBuyerIdentityUpdate: { cart: CartType; errors: UserError[] };
   }>(UPDATE_CART_BUYER_COUNTRY, {
     variables: {
       cartId,
@@ -463,7 +465,7 @@ export async function cartUpdateBuyerIdentity({
 
   invariant(
     cartBuyerIdentityUpdate,
-    'No data returned from cart buyer identity update mutation',
+    'No data returned from cart buyer identity update mutation'
   );
 
   return cartBuyerIdentityUpdate;
@@ -502,8 +504,8 @@ export async function cartDiscountCodesUpdate({
   discountCodes: string[];
   storefront: AppLoadContext['storefront'];
 }) {
-  const {cartDiscountCodesUpdate} = await storefront.mutate<{
-    cartDiscountCodesUpdate: {cart: CartType; errors: UserError[]};
+  const { cartDiscountCodesUpdate } = await storefront.mutate<{
+    cartDiscountCodesUpdate: { cart: CartType; errors: UserError[] };
   }>(DISCOUNT_CODES_UPDATE, {
     variables: {
       cartId,
@@ -513,7 +515,7 @@ export async function cartDiscountCodesUpdate({
 
   invariant(
     cartDiscountCodesUpdate,
-    'No data returned from the cartDiscountCodesUpdate mutation',
+    'No data returned from the cartDiscountCodesUpdate mutation'
   );
 
   return cartDiscountCodesUpdate;

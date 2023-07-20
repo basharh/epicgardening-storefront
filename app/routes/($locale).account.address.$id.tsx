@@ -1,4 +1,4 @@
-import {json, redirect, type ActionFunction} from '@shopify/remix-oxygen';
+import { json, redirect, type ActionFunction } from '@shopify/remix-oxygen';
 import {
   Form,
   useActionData,
@@ -6,27 +6,27 @@ import {
   useParams,
   useNavigation,
 } from '@remix-run/react';
-import {flattenConnection} from '@shopify/hydrogen';
-import type {MailingAddressInput} from '@shopify/hydrogen/storefront-api-types';
+import { flattenConnection } from '@shopify/hydrogen';
+import type { MailingAddressInput } from '@shopify/hydrogen/storefront-api-types';
 import invariant from 'tiny-invariant';
 
-import {Button, Text} from '~/components';
-import {assertApiErrors, getInputStyleClasses} from '~/lib/utils';
+import { Button, Text } from '~/components';
+import { assertApiErrors, getInputStyleClasses } from '~/lib/utils';
 
-import type {AccountOutletContext} from './($locale).account.edit';
+import type { AccountOutletContext } from './($locale).account.edit';
 
 interface ActionData {
   formError?: string;
 }
 
-const badRequest = (data: ActionData) => json(data, {status: 400});
+const badRequest = (data: ActionData) => json(data, { status: 400 });
 
 export const handle = {
   renderInModal: true,
 };
 
-export const action: ActionFunction = async ({request, context, params}) => {
-  const {storefront, session} = context;
+export const action: ActionFunction = async ({ request, context, params }) => {
+  const { storefront, session } = context;
   const formData = await request.formData();
 
   const customerAccessToken = await session.get('customerAccessToken');
@@ -38,14 +38,14 @@ export const action: ActionFunction = async ({request, context, params}) => {
   if (request.method === 'DELETE') {
     try {
       const data = await storefront.mutate(DELETE_ADDRESS_MUTATION, {
-        variables: {customerAccessToken, id: addressId},
+        variables: { customerAccessToken, id: addressId },
       });
 
       assertApiErrors(data.customerAddressDelete);
 
       return redirect(params.locale ? `${params.locale}/account` : '/account');
     } catch (error: any) {
-      return badRequest({formError: error.message});
+      return badRequest({ formError: error.message });
     }
   }
 
@@ -76,7 +76,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
   if (addressId === 'add') {
     try {
       const data = await storefront.mutate(CREATE_ADDRESS_MUTATION, {
-        variables: {customerAccessToken, address},
+        variables: { customerAccessToken, address },
       });
 
       assertApiErrors(data.customerAddressCreate);
@@ -86,7 +86,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
 
       if (defaultAddress) {
         const data = await storefront.mutate(UPDATE_DEFAULT_ADDRESS_MUTATION, {
-          variables: {customerAccessToken, addressId: newId},
+          variables: { customerAccessToken, addressId: newId },
         });
 
         assertApiErrors(data.customerDefaultAddressUpdate);
@@ -94,7 +94,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
 
       return redirect(params.locale ? `${params.locale}/account` : '/account');
     } catch (error: any) {
-      return badRequest({formError: error.message});
+      return badRequest({ formError: error.message });
     }
   } else {
     try {
@@ -121,17 +121,17 @@ export const action: ActionFunction = async ({request, context, params}) => {
 
       return redirect(params.locale ? `${params.locale}/account` : '/account');
     } catch (error: any) {
-      return badRequest({formError: error.message});
+      return badRequest({ formError: error.message });
     }
   }
 };
 
 export default function EditAddress() {
-  const {id: addressId} = useParams();
+  const { id: addressId } = useParams();
   const isNewAddress = addressId === 'add';
   const actionData = useActionData<ActionData>();
-  const {state} = useNavigation();
-  const {customer} = useOutletContext<AccountOutletContext>();
+  const { state } = useNavigation();
+  const { customer } = useOutletContext<AccountOutletContext>();
   const addresses = flattenConnection(customer.addresses);
   const defaultAddress = customer.defaultAddress;
   /**
@@ -143,7 +143,7 @@ export default function EditAddress() {
    */
   const normalizedAddress = decodeURIComponent(addressId ?? '').split('?')[0];
   const address = addresses.find((address) =>
-    address.id!.startsWith(normalizedAddress),
+    address.id!.startsWith(normalizedAddress)
   );
 
   return (

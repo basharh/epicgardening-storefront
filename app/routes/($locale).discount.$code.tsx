@@ -1,8 +1,8 @@
-import {redirect, type LoaderArgs} from '@shopify/remix-oxygen';
+import { redirect, type LoaderArgs } from '@shopify/remix-oxygen';
 
-import {getCartId} from '~/lib/utils';
+import { getCartId } from '~/lib/utils';
 
-import {cartCreate, cartDiscountCodesUpdate} from './($locale).cart';
+import { cartCreate, cartDiscountCodesUpdate } from './($locale).cart';
 
 /**
  * Automatically applies a discount found on the url
@@ -16,11 +16,11 @@ import {cartCreate, cartDiscountCodesUpdate} from './($locale).cart';
  * ```
  * @preserve
  */
-export async function loader({request, context, params}: LoaderArgs) {
-  const {storefront} = context;
+export async function loader({ request, context, params }: LoaderArgs) {
+  const { storefront } = context;
   // N.B. This route will probably be removed in the future.
   const session = context.session as any;
-  const {code} = params;
+  const { code } = params;
 
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
@@ -41,7 +41,7 @@ export async function loader({request, context, params}: LoaderArgs) {
 
   //! if no existing cart, create one
   if (!cartId) {
-    const {cart, errors: graphqlCartErrors} = await cartCreate({
+    const { cart, errors: graphqlCartErrors } = await cartCreate({
       input: {},
       storefront,
     });
@@ -62,5 +62,5 @@ export async function loader({request, context, params}: LoaderArgs) {
     storefront,
   });
 
-  return redirect(redirectUrl, {headers});
+  return redirect(redirectUrl, { headers });
 }

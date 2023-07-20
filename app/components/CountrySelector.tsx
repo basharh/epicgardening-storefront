@@ -1,23 +1,23 @@
-import {useFetcher, useLocation, useMatches} from '@remix-run/react';
-import {useCallback, useEffect, useRef} from 'react';
-import {useInView} from 'react-intersection-observer';
+import { useFetcher, useLocation, useMatches } from '@remix-run/react';
+import { useCallback, useEffect, useRef } from 'react';
+import { useInView } from 'react-intersection-observer';
 import clsx from 'clsx';
-import type {CartBuyerIdentityInput} from '@shopify/hydrogen/storefront-api-types';
+import type { CartBuyerIdentityInput } from '@shopify/hydrogen/storefront-api-types';
 
-import {Heading, Button, IconCheck} from '~/components';
-import type {Localizations, Locale} from '~/lib/type';
-import {CartAction} from '~/lib/type';
-import {DEFAULT_LOCALE} from '~/lib/utils';
+import { Heading, Button, IconCheck } from '~/components';
+import type { Localizations, Locale } from '~/lib/type';
+import { CartAction } from '~/lib/type';
+import { DEFAULT_LOCALE } from '~/lib/utils';
 
 export function CountrySelector() {
   const [root] = useMatches();
   const fetcher = useFetcher();
   const closeRef = useRef<HTMLDetailsElement>(null);
   const selectedLocale = root.data?.selectedLocale ?? DEFAULT_LOCALE;
-  const {pathname, search} = useLocation();
+  const { pathname, search } = useLocation();
   const pathWithoutLocale = `${pathname.replace(
     selectedLocale.pathPrefix,
-    '',
+    ''
   )}${search}`;
 
   const countries = (fetcher.data ?? {}) as Localizations;
@@ -26,7 +26,7 @@ export function CountrySelector() {
     ? `${defaultLocale?.language}-${defaultLocale?.country}`
     : '';
 
-  const {ref, inView} = useInView({
+  const { ref, inView } = useInView({
     threshold: 0,
     triggerOnce: true,
   });

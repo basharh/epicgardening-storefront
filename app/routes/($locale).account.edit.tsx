@@ -1,4 +1,4 @@
-import {json, redirect, type ActionFunction} from '@shopify/remix-oxygen';
+import { json, redirect, type ActionFunction } from '@shopify/remix-oxygen';
 import {
   useActionData,
   Form,
@@ -12,10 +12,10 @@ import type {
 import clsx from 'clsx';
 import invariant from 'tiny-invariant';
 
-import {Button, Text} from '~/components';
-import {getInputStyleClasses, assertApiErrors} from '~/lib/utils';
+import { Button, Text } from '~/components';
+import { getInputStyleClasses, assertApiErrors } from '~/lib/utils';
 
-import {getCustomer} from './($locale).account';
+import { getCustomer } from './($locale).account';
 
 export interface AccountOutletContext {
   customer: Customer;
@@ -35,7 +35,7 @@ export interface ActionData {
   };
 }
 
-const badRequest = (data: ActionData) => json(data, {status: 400});
+const badRequest = (data: ActionData) => json(data, { status: 400 });
 
 const formDataHas = (formData: FormData, key: string) => {
   if (!formData.has(key)) return false;
@@ -48,14 +48,14 @@ export const handle = {
   renderInModal: true,
 };
 
-export const action: ActionFunction = async ({request, context, params}) => {
+export const action: ActionFunction = async ({ request, context, params }) => {
   const formData = await request.formData();
 
   const customerAccessToken = await context.session.get('customerAccessToken');
 
   invariant(
     customerAccessToken,
-    'You must be logged in to update your account details.',
+    'You must be logged in to update your account details.'
   );
 
   // Double-check current user is logged in.
@@ -110,7 +110,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
 
     return redirect(params?.locale ? `${params.locale}/account` : '/account');
   } catch (error: any) {
-    return badRequest({formError: error.message});
+    return badRequest({ formError: error.message });
   }
 };
 
@@ -126,8 +126,8 @@ export const action: ActionFunction = async ({request, context, params}) => {
  */
 export default function AccountDetailsEdit() {
   const actionData = useActionData<ActionData>();
-  const {customer} = useOutletContext<AccountOutletContext>();
-  const {state} = useNavigation();
+  const { customer } = useOutletContext<AccountOutletContext>();
+  const { state } = useNavigation();
 
   return (
     <>
@@ -222,7 +222,7 @@ export default function AccountDetailsEdit() {
           color="subtle"
           className={clsx(
             'mt-1',
-            actionData?.fieldErrors?.newPassword && 'text-red-500',
+            actionData?.fieldErrors?.newPassword && 'text-red-500'
           )}
         >
           Passwords must be at least 8 characters.

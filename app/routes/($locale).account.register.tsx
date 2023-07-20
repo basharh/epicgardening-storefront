@@ -4,15 +4,15 @@ import {
   type ActionFunction,
   type LoaderArgs,
 } from '@shopify/remix-oxygen';
-import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
-import {useState} from 'react';
+import { Form, useActionData, type V2_MetaFunction } from '@remix-run/react';
+import { useState } from 'react';
 
-import {getInputStyleClasses} from '~/lib/utils';
-import {Link} from '~/components';
+import { getInputStyleClasses } from '~/lib/utils';
+import { Link } from '~/components';
 
-import {doLogin} from './($locale).account.login';
+import { doLogin } from './($locale).account.login';
 
-export async function loader({context, params}: LoaderArgs) {
+export async function loader({ context, params }: LoaderArgs) {
   const customerAccessToken = await context.session.get('customerAccessToken');
 
   if (customerAccessToken) {
@@ -26,10 +26,10 @@ type ActionData = {
   formError?: string;
 };
 
-const badRequest = (data: ActionData) => json(data, {status: 400});
+const badRequest = (data: ActionData) => json(data, { status: 400 });
 
-export const action: ActionFunction = async ({request, context, params}) => {
-  const {session, storefront} = context;
+export const action: ActionFunction = async ({ request, context, params }) => {
+  const { session, storefront } = context;
   const formData = await request.formData();
 
   const email = formData.get('email');
@@ -49,7 +49,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
   try {
     const data = await storefront.mutate(CUSTOMER_CREATE_MUTATION, {
       variables: {
-        input: {email, password},
+        input: { email, password },
       },
     });
 
@@ -60,7 +60,7 @@ export const action: ActionFunction = async ({request, context, params}) => {
       throw new Error(data?.customerCreate?.customerUserErrors.join(', '));
     }
 
-    const customerAccessToken = await doLogin(context, {email, password});
+    const customerAccessToken = await doLogin(context, { email, password });
     session.set('customerAccessToken', customerAccessToken);
 
     return redirect(params.locale ? `${params.locale}/account` : '/account', {
@@ -87,14 +87,14 @@ export const action: ActionFunction = async ({request, context, params}) => {
 };
 
 export const meta: V2_MetaFunction = () => {
-  return [{title: 'Register'}];
+  return [{ title: 'Register' }];
 };
 
 export default function Register() {
   const actionData = useActionData<ActionData>();
   const [nativeEmailError, setNativeEmailError] = useState<null | string>(null);
   const [nativePasswordError, setNativePasswordError] = useState<null | string>(
-    null,
+    null
   );
 
   return (
@@ -129,7 +129,7 @@ export default function Register() {
                   event.currentTarget.value.length &&
                     !event.currentTarget.validity.valid
                     ? 'Invalid email address'
-                    : null,
+                    : null
                 );
               }}
             />
@@ -160,7 +160,7 @@ export default function Register() {
                   setNativePasswordError(
                     event.currentTarget.validity.valueMissing
                       ? 'Please enter a password'
-                      : 'Passwords must be at least 8 characters',
+                      : 'Passwords must be at least 8 characters'
                   );
                 }
               }}

@@ -4,13 +4,13 @@ import {
   type ActionFunction,
   type LoaderArgs,
 } from '@shopify/remix-oxygen';
-import {Form, useActionData, type V2_MetaFunction} from '@remix-run/react';
-import {useState} from 'react';
+import { Form, useActionData, type V2_MetaFunction } from '@remix-run/react';
+import { useState } from 'react';
 
-import {Link} from '~/components';
-import {getInputStyleClasses} from '~/lib/utils';
+import { Link } from '~/components';
+import { getInputStyleClasses } from '~/lib/utils';
 
-export async function loader({context, params}: LoaderArgs) {
+export async function loader({ context, params }: LoaderArgs) {
   const customerAccessToken = await context.session.get('customerAccessToken');
 
   if (customerAccessToken) {
@@ -25,9 +25,9 @@ type ActionData = {
   resetRequested?: boolean;
 };
 
-const badRequest = (data: ActionData) => json(data, {status: 400});
+const badRequest = (data: ActionData) => json(data, { status: 400 });
 
-export const action: ActionFunction = async ({request, context}) => {
+export const action: ActionFunction = async ({ request, context }) => {
   const formData = await request.formData();
   const email = formData.get('email');
 
@@ -39,10 +39,10 @@ export const action: ActionFunction = async ({request, context}) => {
 
   try {
     await context.storefront.mutate(CUSTOMER_RECOVER_MUTATION, {
-      variables: {email},
+      variables: { email },
     });
 
-    return json({resetRequested: true});
+    return json({ resetRequested: true });
   } catch (error: any) {
     return badRequest({
       formError: 'Something went wrong. Please try again later.',
@@ -51,7 +51,7 @@ export const action: ActionFunction = async ({request, context}) => {
 };
 
 export const meta: V2_MetaFunction = () => {
-  return [{title: 'Recover Password'}];
+  return [{ title: 'Recover Password' }];
 };
 
 export default function Recover() {
@@ -108,7 +108,7 @@ export default function Recover() {
                       event.currentTarget.value.length &&
                         !event.currentTarget.validity.valid
                         ? 'Invalid email address'
-                        : null,
+                        : null
                     );
                   }}
                 />

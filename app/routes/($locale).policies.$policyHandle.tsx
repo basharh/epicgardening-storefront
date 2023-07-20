@@ -1,19 +1,23 @@
-import {json, type MetaFunction, type LoaderArgs} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
+import {
+  json,
+  type MetaFunction,
+  type LoaderArgs,
+} from '@shopify/remix-oxygen';
+import { useLoaderData } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 
-import {PageHeader, Section, Button} from '~/components';
-import {routeHeaders} from '~/data/cache';
-import {seoPayload} from '~/lib/seo.server';
+import { PageHeader, Section, Button } from '~/components';
+import { routeHeaders } from '~/data/cache';
+import { seoPayload } from '~/lib/seo.server';
 
 export const headers = routeHeaders;
 
-export async function loader({request, params, context}: LoaderArgs) {
+export async function loader({ request, params, context }: LoaderArgs) {
   invariant(params.policyHandle, 'Missing policy handle');
 
   const policyName = params.policyHandle.replace(
     /-([a-z])/g,
-    (_: unknown, m1: string) => m1.toUpperCase(),
+    (_: unknown, m1: string) => m1.toUpperCase()
   ) as 'privacyPolicy' | 'shippingPolicy' | 'termsOfService' | 'refundPolicy';
 
   const data = await context.storefront.query(POLICY_CONTENT_QUERY, {
@@ -31,16 +35,16 @@ export async function loader({request, params, context}: LoaderArgs) {
   const policy = data.shop?.[policyName];
 
   if (!policy) {
-    throw new Response(null, {status: 404});
+    throw new Response(null, { status: 404 });
   }
 
-  const seo = seoPayload.policy({policy, url: request.url});
+  const seo = seoPayload.policy({ policy, url: request.url });
 
-  return json({policy, seo});
+  return json({ policy, seo });
 }
 
 export default function Policies() {
-  const {policy} = useLoaderData<typeof loader>();
+  const { policy } = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -63,7 +67,7 @@ export default function Policies() {
         </PageHeader>
         <div className="flex-grow w-full md:w-7/12">
           <div
-            dangerouslySetInnerHTML={{__html: policy.body}}
+            dangerouslySetInnerHTML={{ __html: policy.body }}
             className="prose dark:prose-invert"
           />
         </div>

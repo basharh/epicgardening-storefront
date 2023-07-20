@@ -1,9 +1,9 @@
-import {json, type LoaderArgs} from '@shopify/remix-oxygen';
-import type {ProductSortKeys} from '@shopify/hydrogen/storefront-api-types';
-import {flattenConnection} from '@shopify/hydrogen';
+import { json, type LoaderArgs } from '@shopify/remix-oxygen';
+import type { ProductSortKeys } from '@shopify/hydrogen/storefront-api-types';
+import { flattenConnection } from '@shopify/hydrogen';
 import invariant from 'tiny-invariant';
 
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
+import { PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
 
 /**
  * Fetch a given set of products from the storefront API
@@ -14,7 +14,7 @@ import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
  * @returns Product[]
  * @see https://shopify.dev/api/storefront/2023-04/queries/products
  */
-export async function loader({request, context: {storefront}}: LoaderArgs) {
+export async function loader({ request, context: { storefront } }: LoaderArgs) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
 
@@ -42,7 +42,7 @@ export async function loader({request, context: {storefront}}: LoaderArgs) {
     // noop
   }
 
-  const {products} = await storefront.query(API_ALL_PRODUCTS_QUERY, {
+  const { products } = await storefront.query(API_ALL_PRODUCTS_QUERY, {
     variables: {
       count,
       query,

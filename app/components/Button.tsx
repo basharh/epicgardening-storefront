@@ -1,8 +1,8 @@
-import {forwardRef} from 'react';
-import {Link} from '@remix-run/react';
+import { forwardRef } from 'react';
+import { Link } from '@remix-run/react';
 import clsx from 'clsx';
 
-import {missingClass} from '~/lib/utils';
+import { missingClass } from '~/lib/utils';
 
 export const Button = forwardRef(
   (
@@ -19,7 +19,7 @@ export const Button = forwardRef(
       width?: 'auto' | 'full';
       [key: string]: any;
     },
-    ref,
+    ref
   ) => {
     const Component = props?.to ? Link : as;
 
@@ -40,7 +40,7 @@ export const Button = forwardRef(
     const styles = clsx(
       missingClass(className, 'bg-') && variants[variant],
       missingClass(className, 'w-') && widths[width],
-      className,
+      className
     );
 
     return (
@@ -52,5 +52,5 @@ export const Button = forwardRef(
         ref={ref}
       />
     );
-  },
+  }
 );

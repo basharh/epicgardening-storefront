@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import {missingClass, formatText} from '~/lib/utils';
+import { missingClass, formatText } from '~/lib/utils';
 
 export function Text({
   as: Component = 'span',
@@ -46,7 +46,7 @@ export function Text({
     missingClass(className, 'whitespace-') && 'whitespace-pre-wrap',
     missingClass(className, 'text-') && colors[color],
     sizes[size],
-    className,
+    className
   );
 
   return (
@@ -88,7 +88,7 @@ export function Heading({
     missingClass(className, 'whitespace-') && 'whitespace-pre-wrap',
     missingClass(className, 'max-w-') && widths[width],
     missingClass(className, 'font-') && sizes[size],
-    className,
+    className
   );
 
   return (
@@ -141,7 +141,7 @@ export function Section({
     displays[display],
     missingClass(className, '\\mp[xy]?-') && paddings[padding],
     dividers[divider],
-    className,
+    className
   );
 
   return (

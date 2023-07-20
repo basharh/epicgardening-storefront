@@ -1,17 +1,17 @@
 import invariant from 'tiny-invariant';
 import clsx from 'clsx';
-import {json, redirect, type LoaderArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type V2_MetaFunction} from '@remix-run/react';
-import {Money, Image, flattenConnection} from '@shopify/hydrogen';
+import { json, redirect, type LoaderArgs } from '@shopify/remix-oxygen';
+import { useLoaderData, type V2_MetaFunction } from '@remix-run/react';
+import { Money, Image, flattenConnection } from '@shopify/hydrogen';
 
-import {statusMessage} from '~/lib/utils';
-import {Link, Heading, PageHeader, Text} from '~/components';
+import { statusMessage } from '~/lib/utils';
+import { Link, Heading, PageHeader, Text } from '~/components';
 
-export const meta: V2_MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Order ${data?.order?.name}`}];
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+  return [{ title: `Order ${data?.order?.name}` }];
 };
 
-export async function loader({request, context, params}: LoaderArgs) {
+export async function loader({ request, context, params }: LoaderArgs) {
   if (!params.id) {
     return redirect(params?.locale ? `${params.locale}/account` : '/account');
   }
@@ -25,18 +25,18 @@ export async function loader({request, context, params}: LoaderArgs) {
 
   if (!customerAccessToken) {
     return redirect(
-      params.locale ? `${params.locale}/account/login` : '/account/login',
+      params.locale ? `${params.locale}/account/login` : '/account/login'
     );
   }
 
   const orderId = `gid://shopify/Order/${params.id}?key=${orderToken}`;
 
-  const {node: order} = await context.storefront.query(CUSTOMER_ORDER_QUERY, {
-    variables: {orderId},
+  const { node: order } = await context.storefront.query(CUSTOMER_ORDER_QUERY, {
+    variables: { orderId },
   });
 
   if (!order || !('lineItems' in order)) {
-    throw new Response('Order not found', {status: 404});
+    throw new Response('Order not found', { status: 404 });
   }
 
   const lineItems = flattenConnection(order.lineItems);
@@ -61,7 +61,7 @@ export async function loader({request, context, params}: LoaderArgs) {
 }
 
 export default function OrderRoute() {
-  const {order, lineItems, discountValue, discountPercentage} =
+  const { order, lineItems, discountValue, discountPercentage } =
     useLoaderData<typeof loader>();
   return (
     <div>
@@ -289,7 +289,7 @@ export default function OrderRoute() {
                   `mt-3 px-3 py-1 text-xs font-medium rounded-full inline-block w-auto`,
                   order.fulfillmentStatus === 'FULFILLED'
                     ? 'bg-green-100 text-green-800'
-                    : 'bg-primary/20 text-primary/50',
+                    : 'bg-primary/20 text-primary/50'
                 )}
               >
                 <Text size="fine">

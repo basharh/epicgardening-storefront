@@ -1,6 +1,6 @@
-import {defer, type LoaderArgs} from '@shopify/remix-oxygen';
-import {Await, Form, useLoaderData} from '@remix-run/react';
-import {Suspense} from 'react';
+import { defer, type LoaderArgs } from '@shopify/remix-oxygen';
+import { Await, Form, useLoaderData } from '@remix-run/react';
+import { Suspense } from 'react';
 import {
   Pagination__unstable as Pagination,
   getPaginationVariables__unstable as getPaginationVariables,
@@ -17,22 +17,22 @@ import {
   Section,
   Text,
 } from '~/components';
-import {PAGINATION_SIZE} from '~/lib/const';
-import {PRODUCT_CARD_FRAGMENT} from '~/data/fragments';
-import {getImageLoadingPriority} from '~/lib/const';
-import {seoPayload} from '~/lib/seo.server';
+import { PAGINATION_SIZE } from '~/lib/const';
+import { PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
+import { getImageLoadingPriority } from '~/lib/const';
+import { seoPayload } from '~/lib/seo.server';
 
 import {
   getFeaturedData,
   type FeaturedData,
 } from './($locale).featured-products';
 
-export async function loader({request, context: {storefront}}: LoaderArgs) {
+export async function loader({ request, context: { storefront } }: LoaderArgs) {
   const searchParams = new URL(request.url).searchParams;
   const searchTerm = searchParams.get('q')!;
-  const variables = getPaginationVariables(request, {pageBy: 8});
+  const variables = getPaginationVariables(request, { pageBy: 8 });
 
-  const {products} = await storefront.query(SEARCH_QUERY, {
+  const { products } = await storefront.query(SEARCH_QUERY, {
     variables: {
       searchTerm,
       ...variables,
@@ -72,7 +72,7 @@ export async function loader({request, context: {storefront}}: LoaderArgs) {
 }
 
 export default function Search() {
-  const {searchTerm, products, noResultRecommendations} =
+  const { searchTerm, products, noResultRecommendations } =
     useLoaderData<typeof loader>();
   const noResults = products?.nodes?.length === 0;
 
@@ -103,7 +103,7 @@ export default function Search() {
       ) : (
         <Section>
           <Pagination connection={products}>
-            {({nodes, isLoading, NextLink, PreviousLink}) => {
+            {({ nodes, isLoading, NextLink, PreviousLink }) => {
               const itemsMarkup = nodes.map((product, i) => (
                 <ProductCard
                   key={product.id}
@@ -158,7 +158,7 @@ function NoResults({
         >
           {(result) => {
             if (!result) return null;
-            const {featuredCollections, featuredProducts} = result;
+            const { featuredCollections, featuredProducts } = result;
 
             return (
               <>
@@ -180,9 +180,9 @@ function NoResults({
 }
 
 export function getNoResultRecommendations(
-  storefront: LoaderArgs['context']['storefront'],
+  storefront: LoaderArgs['context']['storefront']
 ) {
-  return getFeaturedData(storefront, {pageBy: PAGINATION_SIZE});
+  return getFeaturedData(storefront, { pageBy: PAGINATION_SIZE });
 }
 
 const SEARCH_QUERY = `#graphql

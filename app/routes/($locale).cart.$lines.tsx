@@ -1,6 +1,6 @@
-import {redirect, type LoaderArgs} from '@shopify/remix-oxygen';
+import { redirect, type LoaderArgs } from '@shopify/remix-oxygen';
 
-import {cartCreate} from './($locale).cart';
+import { cartCreate } from './($locale).cart';
 
 /**
  * Automatically creates a new cart based on the URL and redirects straight to checkout.
@@ -21,12 +21,12 @@ import {cartCreate} from './($locale).cart';
  * ```
  * @preserve
  */
-export async function loader({request, context, params}: LoaderArgs) {
-  const {storefront} = context;
+export async function loader({ request, context, params }: LoaderArgs) {
+  const { storefront } = context;
 
   const session = context.session;
 
-  const {lines} = params;
+  const { lines } = params;
   const linesMap = lines?.split(',').map((line) => {
     const lineDetails = line.split(':');
     const variantId = lineDetails[0];
@@ -47,7 +47,7 @@ export async function loader({request, context, params}: LoaderArgs) {
   const headers = new Headers();
 
   //! create a cart
-  const {cart, errors: graphqlCartErrors} = await cartCreate({
+  const { cart, errors: graphqlCartErrors } = await cartCreate({
     input: {
       lines: linesMap,
       discountCodes: discountArray,
@@ -68,7 +68,7 @@ export async function loader({request, context, params}: LoaderArgs) {
 
   //! redirect to checkout
   if (cart.checkoutUrl) {
-    return redirect(cart.checkoutUrl, {headers});
+    return redirect(cart.checkoutUrl, { headers });
   } else {
     throw new Error('No checkout URL found');
   }
