@@ -17,8 +17,8 @@ import type {
   Product as ProductType,
   ProductConnection,
 } from '@shopify/hydrogen/storefront-api-types';
-//import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { GraphQLClient, gql } from 'graphql-request';
+
+import { getWishlist, inWishlist } from '~/data/wishlist';
 
 import {
   Heading,
@@ -42,7 +42,6 @@ import { seoPayload } from '~/lib/seo.server';
 import { MEDIA_FRAGMENT, PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
 import type { Storefront } from '~/lib/type';
 import { routeHeaders } from '~/data/cache';
-import type { Wishlist } from '~/lib/type';
 
 export const headers = routeHeaders;
 
@@ -127,7 +126,10 @@ export default function Product() {
                 <Heading as="h1" className="whitespace-normal">
                   {title}
                 </Heading>
-                <WishlistIcon wishlist={wishlist} product={product} />
+                <WishlistIcon
+                  selected={inWishlist(wishlist, product.id)}
+                  shopifyProductId={product.id}
+                />
                 {vendor && (
                   <Text className={'opacity-50 font-medium'}>{vendor}</Text>
                 )}
@@ -629,27 +631,4 @@ async function getRecommendedProducts(
   mergedProducts.splice(originalProduct, 1);
 
   return { nodes: mergedProducts };
-}
-
-async function getWishlist() {
-  const client = new GraphQLClient('http://localhost:4000/graphql', {
-    fetch: fetch,
-  });
-
-  const result = (await client.request(
-    gql`
-      query GetWishlist {
-        wishlist {
-          id
-          products {
-            id
-            shopifyId
-          }
-        }
-      }
-    `
-  )) as { wishlist: Wishlist };
-
-  return result.wishlist;
-  //.then((result) => console.dir(result, { depth: null }));
 }

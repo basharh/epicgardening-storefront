@@ -6,34 +6,27 @@ import type { Wishlist } from '~/lib/type';
 import { IconHeartOutline, IconHeartFull } from '~/components';
 
 interface WishlistIconProps {
-  wishlist: Wishlist;
-  product: Product;
+  selected: boolean;
+  shopifyProductId: string;
 }
 
 export function WishlistIcon({
-  product,
-  wishlist,
-}: {
-  product: Product;
-  wishlist: Wishlist;
-}) {
+  shopifyProductId,
+  selected,
+}: WishlistIconProps) {
   const fetcher = useFetcher();
-
-  const found =
-    wishlist.products.find((search) => search.shopifyId === product.id) !==
-    undefined;
 
   function handleClick() {
     fetcher.submit(
-      { shopifyProductId: product.id, action: found ? 'remove' : 'add' },
+      { shopifyProductId, action: selected ? 'remove' : 'add' },
       { method: 'post', action: '/wishlist' }
     );
   }
 
   return (
-    <div className="my-2">
+    <div className="p-2">
       <button onClick={handleClick}>
-        {found ? <IconHeartFull /> : <IconHeartOutline />}
+        {selected ? <IconHeartFull /> : <IconHeartOutline />}
       </button>
     </div>
   );

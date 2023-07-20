@@ -4,7 +4,7 @@ import { flattenConnection, Image, Money, useMoney } from '@shopify/hydrogen';
 import type { MoneyV2, Product } from '@shopify/hydrogen/storefront-api-types';
 
 import type { ProductCardFragment } from 'storefrontapi.generated';
-import { Text, Link, AddToCartButton } from '~/components';
+import { Text, Link, AddToCartButton, WishlistIcon } from '~/components';
 import { isDiscounted, isNewArrival } from '~/lib/utils';
 import { getProductPlaceholder } from '~/lib/placeholders';
 
@@ -15,6 +15,7 @@ export function ProductCard({
   loading,
   onClick,
   quickAdd,
+  inWishlist,
 }: {
   product: ProductCardFragment;
   label?: string;
@@ -22,6 +23,7 @@ export function ProductCard({
   loading?: HTMLImageElement['loading'];
   onClick?: () => void;
   quickAdd?: boolean;
+  inWishlist: boolean;
 }) {
   let cardLabel;
 
@@ -55,12 +57,12 @@ export function ProductCard({
 
   return (
     <div className="flex flex-col gap-2">
-      <Link
-        onClick={onClick}
-        to={`/products/${product.handle}`}
-        prefetch="intent"
-      >
-        <div className={clsx('grid gap-4', className)}>
+      <div className={clsx('grid gap-4', className)}>
+        <Link
+          onClick={onClick}
+          to={`/products/${product.handle}`}
+          prefetch="intent"
+        >
           <div className="card-image aspect-[4/5] bg-primary/5">
             {image && (
               <Image
@@ -80,27 +82,30 @@ export function ProductCard({
               {cardLabel}
             </Text>
           </div>
-          <div className="grid gap-1">
+        </Link>
+        <div className="grid gap-1">
+          <div>
             <Text
               className="w-full overflow-hidden whitespace-nowrap text-ellipsis "
               as="h3"
             >
               {product.title}
             </Text>
-            <div className="flex gap-4">
-              <Text className="flex gap-4">
-                <Money withoutTrailingZeros data={price!} />
-                {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
-                  <CompareAtPrice
-                    className={'opacity-50'}
-                    data={compareAtPrice as MoneyV2}
-                  />
-                )}
-              </Text>
-            </div>
+            <WishlistIcon selected={inWishlist} shopifyProductId={product.id} />
+          </div>
+          <div className="flex gap-4">
+            <Text className="flex gap-4">
+              <Money withoutTrailingZeros data={price!} />
+              {isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2) && (
+                <CompareAtPrice
+                  className={'opacity-50'}
+                  data={compareAtPrice as MoneyV2}
+                />
+              )}
+            </Text>
           </div>
         </div>
-      </Link>
+      </div>
       {quickAdd && (
         <AddToCartButton
           lines={[

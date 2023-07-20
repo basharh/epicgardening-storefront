@@ -1,55 +1,16 @@
 import {
-  type ActionArgs,
   json,
+  type ActionArgs,
   type ActionFunction,
+  type LoaderArgs,
 } from '@shopify/remix-oxygen';
-import { GraphQLClient, gql } from 'graphql-request';
-
-async function addToWishlist(shopifyProductId: string) {
-  const client = new GraphQLClient('http://localhost:4000/graphql', {
-    fetch: fetch,
-  });
-
-  await client.request(
-    gql`
-      mutation AddProductToWishlist($shopifyId: ID!) {
-        addProductToWishlist(shopifyProductId: $shopifyId) {
-          id
-          products {
-            id
-          }
-        }
-      }
-    `,
-    {
-      shopifyId: shopifyProductId,
-    }
-  );
-  //.then((result) => console.dir(result, { depth: null }));
-}
-
-async function removeFromWishlist(shopifyProductId: string) {
-  const client = new GraphQLClient('http://localhost:4000/graphql', {
-    fetch: fetch,
-  });
-
-  await client.request(
-    gql`
-      mutation RemoveProductFromWishlist($shopifyId: ID!) {
-        removeProductFromWishlist(shopifyProductId: $shopifyId) {
-          id
-          products {
-            id
-          }
-        }
-      }
-    `,
-    {
-      shopifyId: shopifyProductId,
-    }
-  );
-  //.then((result) => console.dir(result, { depth: null }));
-}
+import { useLoaderData } from '@remix-run/react';
+import { WishlistIcon } from '~/components';
+import {
+  getWishlist,
+  addToWishlist,
+  removeFromWishlist,
+} from '~/data/wishlist';
 
 export const action: ActionFunction = async ({
   context,
@@ -73,3 +34,31 @@ export const action: ActionFunction = async ({
 
   return null;
 };
+
+export async function loader({ params, request, context }: LoaderArgs) {
+  const wishlist = await getWishlist();
+
+  return json({
+    wishlist,
+  });
+}
+
+export default function Wishlist() {
+  const { wishlist } = useLoaderData<typeof loader>();
+
+  return (
+    <div className="m-6">
+      {wishlist.products.map((product) => {
+        return (
+          <div className="flex items-center">
+            <div className="p-2">{product.shopifyId}</div>
+            <WishlistIcon
+              wishlist={wishlist}
+              shopifyProductId={product.shopifyId}
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+}

@@ -26,6 +26,7 @@ import { routeHeaders } from '~/data/cache';
 import { seoPayload } from '~/lib/seo.server';
 import type { AppliedFilter, SortParam } from '~/components/SortFilter';
 import { getImageLoadingPriority } from '~/lib/const';
+import { getWishlist, inWishlist } from '~/data/wishlist';
 
 export const headers = routeHeaders;
 
@@ -122,6 +123,8 @@ export async function loader({ params, request, context }: LoaderArgs) {
 
   const seo = seoPayload.collection({ collection, url: request.url });
 
+  const wishlist = await getWishlist();
+
   return json({
     collection,
     appliedFilters,
@@ -132,11 +135,12 @@ export async function loader({ params, request, context }: LoaderArgs) {
       resourceId: collection.id,
     },
     seo,
+    wishlist,
   });
 }
 
 export default function Collection() {
-  const { collection, collections, appliedFilters } =
+  const { collection, collections, appliedFilters, wishlist } =
     useLoaderData<typeof loader>();
 
   return (
@@ -172,6 +176,7 @@ export default function Collection() {
                       key={product.id}
                       product={product}
                       loading={getImageLoadingPriority(i)}
+                      inWishlist={inWishlist(wishlist, product.id)}
                     />
                   ))}
                 </Grid>

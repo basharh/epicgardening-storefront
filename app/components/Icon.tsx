@@ -276,8 +276,8 @@ export function IconHeartOutline(props: IconProps) {
     <Icon {...props} fill="transparent" stroke={props.stroke || 'currentColor'}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
+        width="100%"
+        height="100%"
         fill="currentColor"
         className="bi bi-heart"
         viewBox="0 0 16 16"
@@ -293,8 +293,8 @@ export function IconHeartFull(props: IconProps) {
     <Icon {...props} fill="transparent" stroke={props.stroke || 'currentColor'}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
+        width="100%"
+        height="100%"
         fill="currentColor"
         className="bi bi-heart-fill"
         viewBox="0 0 16 16"
