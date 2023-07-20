@@ -1,4 +1,4 @@
-import {type SeoConfig} from '@shopify/hydrogen';
+import { type SeoConfig } from '@shopify/hydrogen';
 import type {
   Article,
   Blog,
@@ -20,7 +20,7 @@ import type {
   WebPage,
 } from 'schema-dts';
 
-import type {ShopFragment} from 'storefrontapi.generated';
+import type { ShopFragment } from 'storefrontapi.generated';
 
 function root({
   shop,
@@ -108,7 +108,7 @@ function productJsonLd({
   const origin = new URL(url).origin;
   const variants = product.variants.nodes;
   const description = truncate(
-    product?.seo?.description ?? product?.description,
+    product?.seo?.description ?? product?.description
   );
   const offers: Offer[] = (variants || []).map((variant) => {
     const variantUrl = new URL(url);
@@ -173,13 +173,13 @@ function product({
   url: Request['url'];
 }): SeoConfig<SeoProduct | BreadcrumbList> {
   const description = truncate(
-    product?.seo?.description ?? product?.description ?? '',
+    product?.seo?.description ?? product?.description ?? ''
   );
   return {
     title: product?.seo?.title ?? product?.title,
     description,
     media: selectedVariant?.image,
-    jsonLd: productJsonLd({product, selectedVariant, url}),
+    jsonLd: productJsonLd({ product, selectedVariant, url }),
   };
 }
 
@@ -187,7 +187,7 @@ type CollectionRequiredFields = Omit<
   Collection,
   'products' | 'descriptionHtml' | 'metafields' | 'image' | 'updatedAt'
 > & {
-  products: {nodes: Pick<Product, 'handle'>[]};
+  products: { nodes: Pick<Product, 'handle'>[] };
   image?: null | Pick<Image, 'url' | 'height' | 'width' | 'altText'>;
   descriptionHtml?: null | Collection['descriptionHtml'];
   updatedAt?: null | Collection['updatedAt'];
@@ -234,7 +234,7 @@ function collectionJsonLd({
       '@type': 'CollectionPage',
       name: collection?.seo?.title ?? collection?.title ?? '',
       description: truncate(
-        collection?.seo?.description ?? collection?.description ?? '',
+        collection?.seo?.description ?? collection?.description ?? ''
       ),
       image: collection?.image?.url,
       url: `/collections/${collection.handle}`,
@@ -256,7 +256,7 @@ function collection({
   return {
     title: collection?.seo?.title,
     description: truncate(
-      collection?.seo?.description ?? collection?.description ?? '',
+      collection?.seo?.description ?? collection?.description ?? ''
     ),
     titleTemplate: '%s | Collection',
     media: {
@@ -266,7 +266,7 @@ function collection({
       width: collection?.image?.width,
       altText: collection?.image?.altText,
     },
-    jsonLd: collectionJsonLd({collection, url}),
+    jsonLd: collectionJsonLd({ collection, url }),
   };
 }
 
@@ -288,7 +288,7 @@ function collectionsJsonLd({
         position: index + 1,
         url: `/collections/${collection.handle}`,
       };
-    },
+    }
   );
 
   return {
@@ -316,7 +316,7 @@ function listCollections({
     titleTemplate: '%s | Collections',
     description: 'All hydrogen collections',
     url,
-    jsonLd: collectionsJsonLd({collections, url}),
+    jsonLd: collectionsJsonLd({ collections, url }),
   };
 }
 
@@ -354,7 +354,7 @@ function article({
       articleBody: article.contentHtml,
       datePublished: article?.publishedAt,
       description: truncate(
-        article?.seo?.description || article?.excerpt || '',
+        article?.seo?.description || article?.excerpt || ''
       ),
       headline: article?.seo?.title || '',
       image: article?.image?.url,

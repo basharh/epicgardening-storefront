@@ -7,7 +7,7 @@ import {
 } from '@shopify/remix-oxygen';
 
 export async function doLogout(context: AppLoadContext) {
-  const {session} = context;
+  const { session } = context;
   session.unset('customerAccessToken');
 
   // The only file where I have to explicitly type cast i18n to pass typecheck
@@ -18,10 +18,10 @@ export async function doLogout(context: AppLoadContext) {
   });
 }
 
-export async function loader({context}: LoaderArgs) {
+export async function loader({ context }: LoaderArgs) {
   return redirect(context.storefront.i18n.pathPrefix);
 }
 
-export const action: ActionFunction = async ({context}: ActionArgs) => {
+export const action: ActionFunction = async ({ context }: ActionArgs) => {
   return doLogout(context);
 };

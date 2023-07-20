@@ -1,4 +1,4 @@
-import type {Storefront as HydrogenStorefront} from '@shopify/hydrogen';
+import type { Storefront as HydrogenStorefront } from '@shopify/hydrogen';
 import type {
   CountryCode,
   CurrencyCode,

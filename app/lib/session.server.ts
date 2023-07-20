@@ -12,7 +12,7 @@ import {
 export class HydrogenSession {
   constructor(
     private sessionStorage: SessionStorage,
-    private session: Session,
+    private session: Session
   ) {}
 
   static async init(request: Request, secrets: string[]) {

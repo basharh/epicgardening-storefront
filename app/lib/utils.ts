@@ -1,6 +1,6 @@
-import {useLocation, useMatches} from '@remix-run/react';
-import {parse as parseCookie} from 'worktop/cookie';
-import type {MoneyV2} from '@shopify/hydrogen/storefront-api-types';
+import { useLocation, useMatches } from '@remix-run/react';
+import { parse as parseCookie } from 'worktop/cookie';
+import type { MoneyV2 } from '@shopify/hydrogen/storefront-api-types';
 import typographicBase from 'typographic-base';
 
 import type {
@@ -8,9 +8,9 @@ import type {
   MenuFragment,
   ParentMenuItemFragment,
 } from 'storefrontapi.generated';
-import {countries} from '~/data/countries';
+import { countries } from '~/data/countries';
 
-import type {I18nLocale} from './type';
+import type { I18nLocale } from './type';
 
 type EnhancedMenuItemProps = {
   to: string;
@@ -48,9 +48,9 @@ export function formatText(input?: string | React.ReactNode) {
     return input;
   }
 
-  return typographicBase(input, {locale: 'en-us'}).replace(
+  return typographicBase(input, { locale: 'en-us' }).replace(
     /\s([^\s<]+)\s*$/g,
-    '\u00A0$1',
+    '\u00A0$1'
   );
 }
 
@@ -85,7 +85,7 @@ function resolveToFromType(
     type?: string;
   } = {
     customPrefixes: {},
-  },
+  }
 ) {
   if (!pathname || !type) return '';
 
@@ -149,7 +149,7 @@ function parseItem(customPrefixes = {}) {
   return function (
     item:
       | MenuFragment['items'][number]
-      | MenuFragment['items'][number]['items'][number],
+      | MenuFragment['items'][number]['items'][number]
   ):
     | EnhancedMenu['items'][0]
     | EnhancedMenu['items'][number]['items'][0]
@@ -161,7 +161,7 @@ function parseItem(customPrefixes = {}) {
     }
 
     // extract path from url because we don't need the origin on internal to attributes
-    const {pathname} = new URL(item.url);
+    const { pathname } = new URL(item.url);
 
     /*
       Currently the MenuAPI only returns online store urls e.g — xyz.myshopify.com/..
@@ -175,7 +175,7 @@ function parseItem(customPrefixes = {}) {
           ...item,
           isExternal: false,
           target: '_self',
-          to: resolveToFromType({type: item.type, customPrefixes, pathname}),
+          to: resolveToFromType({ type: item.type, customPrefixes, pathname }),
         }
       : // external links
         {
@@ -203,7 +203,7 @@ function parseItem(customPrefixes = {}) {
 */
 export function parseMenu(
   menu: MenuFragment,
-  customPrefixes = {},
+  customPrefixes = {}
 ): EnhancedMenu | null {
   if (!menu?.items) {
     // eslint-disable-next-line no-console
@@ -305,7 +305,7 @@ export function usePrefixPathWithLocale(path: string) {
 }
 
 export function useIsHomePath() {
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const [root] = useMatches();
   const selectedLocale = root.data?.selectedLocale ?? DEFAULT_LOCALE;
   const strippedPathname = pathname.replace(selectedLocale.pathPrefix, '');
