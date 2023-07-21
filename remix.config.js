@@ -14,7 +14,6 @@ module.exports = {
   serverConditions: ['worker', process.env.NODE_ENV],
   serverDependenciesToBundle: 'all',
   serverModuleFormat: 'esm',
-  serverPlatform: 'neutral',
   serverMinify: process.env.NODE_ENV === 'production',
   postcss: true,
   tailwind: true,
