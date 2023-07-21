@@ -4,9 +4,12 @@ import type { Wishlist } from '~/lib/type';
 export async function addToWishlist(
   shopifyProductId: string
 ): Promise<Wishlist> {
-  const client = new GraphQLClient('http://localhost:4000/graphql', {
-    fetch: fetch,
-  });
+  const client = new GraphQLClient(
+    'https://epicgardening-wishlist-service-production.up.railway.app/',
+    {
+      fetch: fetch,
+    }
+  );
 
   const res = (await client.request(
     gql`
@@ -29,9 +32,12 @@ export async function addToWishlist(
 }
 
 export async function removeFromWishlist(shopifyProductId: string) {
-  const client = new GraphQLClient('http://localhost:4000/graphql', {
-    fetch: fetch,
-  });
+  const client = new GraphQLClient(
+    'https://epicgardening-wishlist-service-production.up.railway.app/',
+    {
+      fetch: fetch,
+    }
+  );
 
   const res = (await client.request(
     gql`
@@ -52,9 +58,12 @@ export async function removeFromWishlist(shopifyProductId: string) {
 }
 
 export async function getWishlist() {
-  const client = new GraphQLClient('http://localhost:4000/graphql', {
-    fetch: fetch,
-  });
+  const client = new GraphQLClient(
+    'https://epicgardening-wishlist-service-production.up.railway.app/',
+    {
+      fetch: fetch,
+    }
+  );
 
   const res = (await client.request(
     gql`

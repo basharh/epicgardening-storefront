@@ -18,7 +18,7 @@ import type {
   ProductConnection,
 } from '@shopify/hydrogen/storefront-api-types';
 
-import { getWishlist, inWishlist } from '~/data/wishlist';
+import { inWishlist, getWishlist } from '~/data/wishlist';
 
 import {
   Heading,
