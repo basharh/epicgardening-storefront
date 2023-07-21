@@ -11,6 +11,7 @@ import { PRODUCT_CARD_FRAGMENT } from '~/data/fragments';
 import { getImageLoadingPriority } from '~/lib/const';
 import { seoPayload } from '~/lib/seo.server';
 import { routeHeaders } from '~/data/cache';
+import { getWishlist, inWishlist } from '~/data/wishlist';
 
 const PAGE_BY = 8;
 
@@ -28,6 +29,8 @@ export async function loader({ request, context: { storefront } }: LoaderArgs) {
   });
 
   invariant(data, 'No data returned from Shopify API');
+
+  const wishlist = await getWishlist();
 
   const seo = seoPayload.collection({
     url: request.url,
@@ -50,11 +53,12 @@ export async function loader({ request, context: { storefront } }: LoaderArgs) {
   return json({
     products: data.products,
     seo,
+    wishlist,
   });
 }
 
 export default function AllProducts() {
-  const { products } = useLoaderData<typeof loader>();
+  const { products, wishlist } = useLoaderData<typeof loader>();
 
   return (
     <>
@@ -67,6 +71,7 @@ export default function AllProducts() {
                 key={product.id}
                 product={product}
                 loading={getImageLoadingPriority(i)}
+                inWishlist={inWishlist(wishlist, product.id)}
               />
             ));
 
